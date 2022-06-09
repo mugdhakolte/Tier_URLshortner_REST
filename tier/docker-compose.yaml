@@ -1,0 +1,27 @@
+version: "3.3"
+
+services:
+  db_rest:
+    image: postgres
+    volumes:
+      - pgrestdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=tier_rest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+  web_rest:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/code
+    ports:
+      - "8001:8001"
+    environment:
+      - POSTGRES_NAME=tier_rest
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    depends_on:
+      - db_rest
+
+volumes:
+  pgrestdata:
